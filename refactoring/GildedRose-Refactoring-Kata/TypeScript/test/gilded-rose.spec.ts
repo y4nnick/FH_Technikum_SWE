@@ -48,13 +48,20 @@ describe('Gilded Rose', () => {
     it('should degrade quality twice as fast once the sell by date has passed', () => {
         const gildedRose = new GildedRose([
             new Item('foo', 0, 5),
+            new Item('foo', -2, 1),
         ])
 
         let items = gildedRose.updateQuality()
         expect(items[0].quality).to.equal(3)
 
+        gildedRose.updateQuality()
+        gildedRose.updateQuality()
+        gildedRose.updateQuality()
         items = gildedRose.updateQuality()
-        expect(items[0].quality).to.equal(1)
+
+        // Should not go below 0
+        expect(items[0].quality).to.equal(0)
+        expect(items[1].quality).to.equal(0)
     })
 
 

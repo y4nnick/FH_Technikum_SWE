@@ -33,28 +33,23 @@ export class GildedRose {
             // Decrease the sellIn for all the items
             item.sellIn -= 1;
 
+
             // Handle a normal item
             if (this.isNormalItem(item)) {
+                item.quality -= 1
 
-                // Quality should never be negative
-                if (item.quality > 0) {
-
-                    // Quality should decrease twice as fast if the sell by date has passed
-                    item.quality -= (item.sellIn < 0) ? 2 : 1
+                // Quality should decrease twice as fast if the sell by date has passed
+                if(item.sellIn < 0){
+                    item.quality -= 1
                 }
-
-                return
             }
+
 
             // Handle special item: Aged Brie
             if (item.name === ITEM_AGED_BRIE) {
-
-                if (item.quality < 50) {
-                    item.quality += 1
-                }
-
-                return
+                item.quality += 1
             }
+
 
             // Handle special item: Backstage passes
             if (item.name === ITEM_BACKSTAGE_PASSES) {
@@ -62,19 +57,19 @@ export class GildedRose {
                 // After the concert the backstage pass has no value any more
                 if (item.sellIn < 0) {
                     item.quality = 0
-                    return
+                } else {
+
+                    // Calculate the new quality based on the sell date
+                    item.quality += 1
+                    if (item.sellIn <= 5) item.quality += 1
+                    if (item.sellIn <= 10) item.quality += 1
                 }
-
-                // Calculate the new quality
-                let newQuality = item.quality + 1
-                if (item.sellIn <= 5) newQuality += 1
-                if (item.sellIn <= 10) newQuality += 1
-
-                // The max quality is 50
-                item.quality = Math.min(50, newQuality)
-
-                return
             }
+
+
+            // The quality can only be in the interval [0...50]
+            if (item.quality < 0) item.quality = 0
+            if (item.quality > 50) item.quality = 50
         })
 
         return this.items;

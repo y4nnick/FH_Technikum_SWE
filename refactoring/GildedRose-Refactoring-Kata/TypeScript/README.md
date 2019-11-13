@@ -1,4 +1,4 @@
-### Steps:
+### Steps
 
  - Added newlines and comments to better understand the code
  - Added tests for all the requirements
@@ -19,3 +19,7 @@
     - Move the check for `sellIn < 0` to the top and early exit
     - Change `item.sellIn < 11` to `item.sellIn <= 10` since we would like to use the exact numbers from the requirements
     - Calculate the new quality in an own var and only check once at the end if we have more than 50
+ - By removing the early exits we can check at the bottom once for invalid qualities
+ - This way we are sure that we have all checks in one place
+    but we sacrifice the early exits for that, which i really like
+    because each item is handled in a defined space without the danger that it changes later on by mistake
