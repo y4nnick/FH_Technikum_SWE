@@ -7,12 +7,12 @@ describe('Gilded Rose', () => {
         const gildedRose = new GildedRose([
             new Item('foo', 5, 5),
             new Item('bar', 0, 5),
-            new Item('cok', 0, 5)
+            new Item('ccc', 0, 5)
         ])
         const items = gildedRose.updateQuality()
         expect(items[0].name).to.equal('foo')
         expect(items[1].name).to.equal('bar')
-        expect(items[2].name).to.equal('cok')
+        expect(items[2].name).to.equal('ccc')
     })
 
     // REQ: 3
@@ -47,21 +47,15 @@ describe('Gilded Rose', () => {
     // REQ: 4
     it('should degrade quality twice as fast once the sell by date has passed', () => {
         const gildedRose = new GildedRose([
-            new Item('foo', 0, 5),
-            new Item('foo', -2, 1),
+            new Item('foo', 1, 5),
+            new Item('bar', 0, 5),
+            new Item('ccc', -1, 5),
         ])
 
         let items = gildedRose.updateQuality()
-        expect(items[0].quality).to.equal(3)
-
-        gildedRose.updateQuality()
-        gildedRose.updateQuality()
-        gildedRose.updateQuality()
-        items = gildedRose.updateQuality()
-
-        // Should not go below 0
-        expect(items[0].quality).to.equal(0)
-        expect(items[1].quality).to.equal(0)
+        expect(items[0].quality).to.equal(4)
+        expect(items[0].quality).to.equal(4)
+        expect(items[0].quality).to.equal(4)
     })
 
 
@@ -69,10 +63,22 @@ describe('Gilded Rose', () => {
     it('should not decrease the quality value for a normal item with quality 0', () => {
         const gildedRose = new GildedRose([
             new Item('foo', 5, 0),
+            new Item('foo', 0, 5),
         ])
 
-        const items = gildedRose.updateQuality()
+        let items = gildedRose.updateQuality()
         expect(items[0].quality).to.equal(0)
+        expect(items[1].quality).to.equal(3)
+
+        gildedRose.updateQuality()
+        gildedRose.updateQuality()
+        gildedRose.updateQuality()
+        gildedRose.updateQuality()
+        gildedRose.updateQuality()
+
+        items = gildedRose.updateQuality()
+        expect(items[0].quality).to.equal(0)
+        expect(items[1].quality).to.equal(0)
     })
 
     // REQ: 6
@@ -157,7 +163,7 @@ describe('Gilded Rose', () => {
         let items = gildedRose.updateQuality()
         expect(items[0].quality).to.equal(8)
 
-        // Concert is over here
+        // Concert is over here therefore quality should drop to 0
         items = gildedRose.updateQuality()
         expect(items[0].quality).to.equal(0)
     })
@@ -171,6 +177,5 @@ describe('Gilded Rose', () => {
         expect(gildedRose.isNormalItem(new Item(ITEM_SULFURAS, 0, 0))).to.equal(false)
 
         expect(gildedRose.isNormalItem(new Item('Normal one', 0, 0))).to.equal(true)
-
     })
 })
