@@ -60,7 +60,9 @@ public class SecurityConfigurationConnectorTest {
         SecurityConfiguration configuration = sut.read(Paths.get(ClassLoader.getSystemResource(FILENAME).toURI()));
         assertNotNull("yearLowest not found", configuration.getYearLowest());
         assertEquals("EUR", configuration.getYearLowest().getCurrency());
-        assertEquals(BigDecimal.valueOf(29.60d), configuration.getYearLowest().getValue());
+        // Test was failing because of wrong precision
+        // assertEquals(BigDecimal.valueOf(29.60d), configuration.getYearLowest().getValue());
+        assertEquals(new BigDecimal("29.60"), configuration.getYearLowest().getValue());
     }
 
 }

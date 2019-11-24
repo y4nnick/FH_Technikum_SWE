@@ -1,16 +1,25 @@
 package at.technikum.wien.mse.swe.model;
 
+import at.technikum.wien.mse.swe.connector.FieldAlignment;
+import at.technikum.wien.mse.swe.connector.StructureField;
+
 /**
  * @author MatthiasKreuzriegler
  */
 public class SecurityAccountOverview {
 
-    // Lösung während der LV:
-    // @Datefield(position=10, algin=LEFT, padding=ß)
+    @StructureField(padding = '0', alignment = FieldAlignment.RIGHT, begin = 41, length = 10)
     private String accountNumber;
 
+    @StructureField(name = "code", alignment = FieldAlignment.LEFT, begin = 51, length = 2)
     private RiskCategory riskCategory;
+
+    @StructureField(name= "lastname", alignment = FieldAlignment.RIGHT, begin = 53, length = 30)
+    @StructureField(name= "firstname", alignment = FieldAlignment.RIGHT, begin = 83, length = 30)
     private DepotOwner depotOwner;
+
+    @StructureField(name= "currency", alignment = FieldAlignment.LEFT, begin = 113, length = 3)
+    @StructureField(name= "value", alignment = FieldAlignment.RIGHT, begin = 116, length = 17)
     private Amount balance;
 
     public String getAccountNumber() {
