@@ -11,6 +11,10 @@ public @interface StructureField {
     int begin();
     int length();
     char padding() default ' ';
-    String name() default "";
     FieldAlignment alignment();
+
+    /**
+     * Field name in the nested object.
+     */
+    String name() default "";
 }
