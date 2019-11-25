@@ -1,7 +1,6 @@
 package at.technikum.wien.mse.swe.connector;
 
 import at.technikum.wien.mse.swe.exception.ConnectorReadException;
-import at.technikum.wien.mse.swe.exception.SecurityAccountOverviewReadException;
 import at.technikum.wien.mse.swe.model.RiskCategory;
 
 import java.io.BufferedReader;
@@ -22,11 +21,17 @@ public class Connector {
         try {
             T instance = classType.newInstance();
 
+            /*
+             * We will loop over each field of the class we have to create.
+             * If this field has one ore more `StructureField` annotation we will handle each of them.
+             */
+
             for (Field field : classType.getDeclaredFields()) {
                 StructureField[] structureFields = field.getAnnotationsByType(StructureField.class);
 
                 Class objectClass = field.getType();
 
+                // Make the field accessable
                 Boolean fieldAccessible = field.isAccessible();
                 field.setAccessible(true);
 
@@ -35,7 +40,8 @@ public class Connector {
 
                     if (String.class.equals(objectClass)) {
                         Connector.setValueOnField(field, instance, value);
-                    } else if (RiskCategory.class.equals(objectClass)) {
+                    }
+                    else if (RiskCategory.class.equals(objectClass)) {
                         Connector.setValueOnField(field, instance,  RiskCategory.fromCode(value).get());
                     }
                     else if (!field.getType().isPrimitive()) {
@@ -58,12 +64,13 @@ public class Connector {
                     }
                 }
 
+                // Set back the accessibility to the value before
                 field.setAccessible(fieldAccessible);
             }
 
             return instance;
         } catch (Exception e) {
-            throw new SecurityAccountOverviewReadException(e);
+            throw new ConnectorReadException(e);
         }
     }
 
@@ -105,7 +112,7 @@ public class Connector {
         modifiersField.setAccessible(true);
         modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 
-        // Make the field accessible
+        // Make the field public
         Boolean accessible = field.isAccessible();
         field.setAccessible(true);
 
